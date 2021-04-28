@@ -1,0 +1,97 @@
+<%
+    var totalRecord = param.record.length;
+    var pageSize = 5;
+    var totalPage = Math.ceil(totalRecord/pageSize);
+    var blockSize=10;
+    var currentPage = param.currentPage;
+    var curPos = (currentPage-1)*pageSize;// 배열의 시작인덱스
+    var num =totalRecord - curPos ;
+    var nextPage = Math.ceil(currentPage/pageSize)*pageSize+1
+    var prevPage = (Math.ceil(currentPage/pageSize)-1)*pageSize
+%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/css/admin_topnavi.css">
+        <style>
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+}
+
+td,th {
+    text-align: left;
+    padding: 16px;
+}
+
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+</style>
+</head>
+<body>
+    <%if(loginUser.user_name == "undefined"){%>
+        <%- include ('../inc/topnavi')%>
+        <%}else{%>
+        <%- include ('../inc/topnavi_user')%>
+        <%}%>
+    
+    <h2><%=currentPage+" 페이지"%></h2>
+    <p>구매자를 위한 테이블입니다.</p>
+
+    <table>
+        <tr>
+            <th>No</th>
+            <th>이미지</th>
+            <th>상품이름</th>
+            <th>가격</th>
+            <th>판매처</th>
+        </tr>
+        <%for(var i = 1; i<=pageSize; i++){%>
+            <%if(num<1)break;%>
+                <%var product = param.record[curPos++]%>
+        <tr>
+            <td><%=(num--)%></td>
+            <td>
+                <img src = "/image/product_img/<%=product.filename%>" width="50px">
+            </td>
+            <td>
+                <a href="/homepage/market/detail?product_id=<%=product.product_id%>"><%=product.sub_name%></a>
+                
+            </td>
+            <td><%=product.price%></td>
+            <td><%=product.market_name%></td>
+        </tr>
+        <%}%>
+        <tr>
+            <td colspan="6" style="text-align: center;">
+                <%if(prevPage<1){%>
+                    <a href = "/homepage/market/market?currentPage=<%=1%>">◀</a>
+                <%}else{%>
+                    <a href = "/homepage/market/market?currentPage=<%=prevPage%>">◀</a>
+                <%}%>
+                <%for(var i=1;i<=blockSize;i++){%>
+                    <%if(i>totalPage)break;%>
+                    <a href = "/homepage/market/market?currentPage=<%=i%>">[<%=i%>]</a>
+                    <%}%>
+                <%if(nextPage>totalPage){%>
+                    <a href = "/homepage/market/market?currentPage=<%=totalPage%>">▶</a>
+                <%}else{%>
+                    <a href = "/homepage/market/market?currentPage=<%=nextPage%>">▶</a>
+                <%}%>
+                    
+                    
+                </td>
+            </tr>
+        </table>
+        <br>
+        <!-- <button onclick="location.href='/admin/product/registform'">등록</button> -->
+        
+        
+    </body>
+    </html>

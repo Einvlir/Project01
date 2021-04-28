@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- link = 미리 작성해둔 디자인을 css파일을 끌어옴으로써 적용. -->
+<link rel="stylesheet" href="/css/admin_topnavi.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+input[type=text], select, textarea, input[type=file] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+  
+}
+
+input[type=button] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=button]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+</style>
+<script>
+function buy(){
+  //유효성 체크
+    //현재 페이지에 대해서 window, document는 하나밖에 없기에(유일성을 가지기에)
+  //생략이 가능하다.
+  editForm.action="/homepage/market/purchase"
+  editForm.method="POST";
+  //바이너리 파일이 form에 포함될 경우 
+  editForm.submit();
+}
+
+function bucket(){
+  editForm.action="/homepage/market/zzimlist"
+  editForm.method="POST";
+  // editForm.encoding="multipart/form-data";
+  editForm.submit();
+  alert("장바구니에 등록되었습니다.")
+}
+</script>
+</head>
+<body>
+  <%if(loginUser.user_name == "undefined"){%>
+    <%- include ('../inc/topnavi')%>
+    <%}else{%>
+    <%- include ('../inc/topnavi_user')%>
+    <%}%>
+<%var season = record[1][0].season_id%>
+<%var color = record[1][0].color_id%>
+<%var treetype = record[1][0].type_id%>
+<h3>상품</h3>
+<div class="container">
+  <form name = "editForm">
+    <input type="hidden" name = "product_id " value="<%=record[1][0].product_id%>">
+    <input type="hidden" name = "user_No " value="<%=loginUser.user_No%>">
+    <input type="text" id = "seasoncategory_id" name="seasoncategory_id" placeholder="" value="<%=record[0][season-1].season_name%>" readonly>
+    <input type="text" id = "colorcategory_id" name="colorcategory_id" placeholder="" value="<%=record[2][color-1].color_name%>" readonly>
+    <input type="text" id = "typecategory_id" name="typecategory_id" placeholder="" value="<%=record[3][treetype-1].type_name%>" readonly>
+    <input type="text" id = "product_name" name="product_name" placeholder="상품명" value="<%=record[1][0].sub_name%>" readonly>
+    <input type="text" id = "price" name="price" placeholder="가격" value="<%=record[1][0].price%>" readonly>
+    <input type="text" id = "brand" name="brand" value="<%=record[1][0].market_name%>" readonly>
+    <textarea placeholder="상세설명" id= "detail" name = "detail" style="height:200px" readonly><%=record[1][0].detail%></textarea>
+    <input type="hidden" name= "product_id" value="<%=record[1][0].product_id%>" readonly>
+    <p></p>
+    <input type="button" value="구매" onClick="edit()">
+    <%if(loginUser.user_name == "undefined"){%>
+    <input type="button" value="장바구니" onClick="alert('비회원은 사용할 수 없는 기능입니다')">
+    <%}else{%>
+    <input type="button" value="장바구니" onClick="bucket()">
+    <%}%>
+    <input type="button" value="목록" onClick="location.href='/homepage/market/market'">
+  </form>
+</div>
+
+</body>
+</html>

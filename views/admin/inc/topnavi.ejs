@@ -1,0 +1,16 @@
+<div class="topnav">
+    <a class="active" onclick="logout()"><%=adminUser.master_name%>님 로그아웃</a>
+    <a href="/homepage/main" target="_blank">HomePage</a>
+    <a href="/admin/main">Main</a>
+    <a href="#">게시판 관리</a>
+    <a href="/admin/product/list">상품관리</a>
+    <a href="#">주문관리</a>
+    <a href="/admin/list/userlist">회원관리</a>
+    <a href="#">상담게시판</a>
+</div>
+    <script>
+    function logout(){
+        alert("안녕히 가세요");
+        location.href = "/admin/loginform"        
+    }
+    </script>

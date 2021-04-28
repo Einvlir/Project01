@@ -1,0 +1,126 @@
+<%
+    var totalRecord = param.record.length;
+    var pageSize = 5;
+    var totalPage = Math.ceil(totalRecord/pageSize);
+    var blockSize=10;
+    var currentPage = param.currentPage;
+    var curPos = (currentPage-1)*pageSize;// 배열의 시작인덱스
+    var num =totalRecord - curPos ;
+    var nextPage = Math.ceil(currentPage/pageSize)*pageSize+1
+    var prevPage = (Math.ceil(currentPage/pageSize)-1)*pageSize
+%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/css/admin_topnavi.css">
+        <style>
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+}
+
+td,th {
+    text-align: left;
+    padding: 16px;
+}
+
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+</style>
+<script>
+function checkOnlyOne(element){
+    var checkboxes = document.getElementsByName("ch");
+    checkboxes.forEach((cb)=>{
+        cb.checked = false;
+    })
+    element.checked = true;
+}
+function del(){
+    if(confirm("삭제하시겠습니까?")){
+        form1.action="/homepage/market/zzimdel";
+        form1.method="GET";
+        form1.submit();
+    }
+}
+function allDel(){
+    if(confirm("모두 비우시겠습니까?")){
+        form1.action="/homepage/market/zzimAlldel";
+        form1.method="GET";
+        form1.submit();
+    }
+}
+</script>
+</head>
+<body>
+    <%if(loginUser.user_name == "undefined"){%>
+        <%- include ('../inc/topnavi')%>
+        <%}else{%>
+        <%- include ('../inc/topnavi_user')%>
+        <%}%>
+    
+    <h2><%=currentPage+" 페이지"%></h2>
+    <p>장바구니 테이블입니다.</p>
+    <form  name="form1">
+    <table>
+        <tr>
+            <th>No</th>
+            <th>체크</th>
+            <th>이미지</th>
+            <th>상품이름</th>
+            <th>가격</th>
+            <th>판매처</th>
+            <th></th>
+        </tr>
+        <%for(var i = 1; i<=pageSize; i++){%>
+            <%if(num<1)break;%>
+                <%var product = param.record[curPos++]%>
+                <tr>
+                    <td><%=(num--)%></td>
+                    <td><input type="checkbox" name = "ch" value="<%=product.basket_id%>" onclick="checkOnlyOne(this)"></td>
+                    <td>
+                        <img src = "/image/product_img/<%=product.filename%>" width="50px">
+                    </td>
+                    <td>
+                        <a href="/homepage/market/detail?product_id=<%=product.product_id%>"><%=product.sub_name%></a>
+                        
+                    </td>
+                    <td><%=product.price%></td>
+                    <td><%=product.market_name%></td>
+                    <td><input type="hidden" name="user_No" value="<%=product.user_No%>"></td>
+                </tr>
+        <%}%>
+        <tr>
+            <td colspan="7" style="text-align: center;">
+            <%if(prevPage<1){%>
+                <a href="/homepage/user/basket?currentPage=<%=1%>">◀</a>
+            <%}else{%>
+                <a href="/homepage/user/basket?currentPage=<%=prevPage%>">◀</a>
+            <%}%>
+            <%for(var i=1;i<=blockSize;i++){%>
+                <%if(i>totalPage)break;%>
+                    <a href="/homepage/user/basket?currentPage=<%=i%>">[<%=i%>]</a>
+                <%}%>
+                <%if(nextPage>totalPage){%>
+                    <a href="/homepage/user/basket?currentPage=<%=totalPage%>">▶</a>
+                <%}else{%>
+                    <a href="/homepage/user/basket?currentPage=<%=nextPage%>">▶</a>
+                <%}%>
+                
+            </td>
+        </tr>
+    </table>
+</form>
+    <br>
+    <button onclick="location.href='#'">구매</button>
+    <button onclick="del()">삭제</button>
+    <button onclick="allDel()">모두 비우기</button>
+    
+    
+    </body>
+    </html>

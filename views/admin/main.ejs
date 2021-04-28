@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/css/admin_topnavi.css">
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+// var season = seasonRec;
+// Load google charts
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(getChartData);
+// var a = record
+// Draw the chart and set the chart values
+function getChartData(){
+  $.ajax({
+    type:"GET",
+    url :"/admin/main/chart",
+    success:function(result,status,xhr){
+      // console.log(result)
+      var data = result
+      // console.log(data)
+      drawChart(data);
+    },
+    error:function(xhr,status,error){
+      console.log("데이터불러오기 에러", error)
+    }
+  });
+}
+function drawChart(chartData) {
+  console.log(chartData[0])
+  var data = google.visualization.arrayToDataTable([
+  ['Task', 'Hours per Day'],
+  [chartData[0].season_name, chartData[0].cnt],
+  [chartData[1].season_name, chartData[1].cnt],
+  [chartData[2].season_name, chartData[2].cnt],
+  [chartData[3].season_name, chartData[3].cnt]
+]);
+
+  // Optional; add a title and set the width and height of the chart
+  var options = {'title':'등록된 상품(개화시기별)', 'width':550, 'height':400};
+
+  // Display the chart inside the <div> element with id="piechart"
+    //for문 돌리면 여러개 만들수
+  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+  chart.draw(data, options);
+}
+</script>
+<style>
+
+
+</style>
+</head>
+<body>
+<!-- 탑내비게이션 -->
+<%- include ('./inc/topnavi')%>
+
+    <div style="padding-left:16px">
+        <h2>관리자용 페이지입니다.</h2>
+        <p id = "piechart">Some content..</p>
+
+    </div>
+</body>
+</html>
+

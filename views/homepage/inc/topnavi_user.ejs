@@ -1,0 +1,16 @@
+<div class="topnav">
+    <a class="active" onclick="logout()"><%=loginUser.user_name%>님 로그아웃</a>
+    <a href="/homepage/main">MainPage</a>
+    <a href="#">공지사항</a>
+    <a href="#">자료&정보</a>
+    <a href="/homepage/market/market">장터게시판</a>
+    <a href="#">QnA</a>
+    <a href="/homepage/user/mypage?user_No=<%=loginUser.user_No%>">마이페이지</a>
+    <a href="/homepage/user/basket?user_No=<%=loginUser.user_No%>">장바구니</a>
+</div>
+<script>
+    function logout() {
+        alert("안녕히 가세요");
+        location.href = "/homepage/user/loginform"
+    }
+</script>
